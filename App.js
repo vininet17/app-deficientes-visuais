@@ -16,20 +16,14 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-const mensagem = Platform.select({
-  ios: 'IOS é ruim',
-  android: 
-    'Espero que esteja funcionando bem!\n' +
-    'Divirta-se',
-}); 
-
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Bem vindo ao meu novo APP!</Text>
-        <Text style={styles.instructions}>{mensagem}</Text>
+        <Text style={styles.welcome}>Welcome to React Native!</Text>
+        <Text style={styles.instructions}>To get started, edit App.js</Text>
+        <Text style={styles.instructions}>{instructions}</Text>
       </View>
     );
   }
@@ -40,17 +34,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5A9A9',
+    backgroundColor: '#F5FCFF',
   },
   welcome: {
-    fontSize: 25,
+    fontSize: 20,
     textAlign: 'center',
     margin: 10,
-    color: '#0000FF',
   },
   instructions: {
     textAlign: 'center',
-    color: '#0040FF',
+    color: '#333333',
     marginBottom: 5,
   },
 });
