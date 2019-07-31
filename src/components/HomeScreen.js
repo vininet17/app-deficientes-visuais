@@ -20,14 +20,14 @@ export default class HomeScreen extends PureComponent{
 		return (
 			<View style={estilos.principal}>
 				<StatusBar hidden={true}/>
-				<TouchableOpacity>
-					<Image style={estilos.imagem} source={require('../imagens/add.png')} />
+				<TouchableOpacity onPress={ () => this.props.navigation.navigate('Add')}>
+					<Image style={estilos.imagem} source={require('../imagens/addm.png')} />
 				</TouchableOpacity>
 				<TouchableOpacity onPress={ () => this.props.navigation.navigate('Camera')}>
-					<Image style={estilos.imagem} source={require('../imagens/cam.png')} />
+					<Image style={estilos.imagem} source={require('../imagens/camm.png')} />
 				</TouchableOpacity>	
-				<TouchableOpacity>
-					<Image style={estilos.imagem} source={require('../imagens/doc.png')} />
+				<TouchableOpacity onPress={ () => this.props.navigation.navigate('Voice')}>
+					<Image style={estilos.imagem} source={require('../imagens/docm.png')} />
 				</TouchableOpacity>		
 			</View>
 		);

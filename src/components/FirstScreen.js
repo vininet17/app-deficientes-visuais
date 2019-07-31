@@ -1,5 +1,5 @@
 import React, {PureComponent}  from 'react';
-import { View, Image, Text, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Image, Text, TouchableOpacity, StatusBar, PermissionsAndroid } from 'react-native';
 
 const estilos = {
 	principal: {
@@ -28,7 +28,7 @@ export default class FirstScreen extends PureComponent{
           <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
             <Image style={estilos.imagem} source={require('../imagens/logo.png')} />
           </TouchableOpacity>
-          <Text style={estilos.texto}>EYE</Text>
+          <Text style={estilos.texto}>SEES</Text>
       </View>
     );
   }

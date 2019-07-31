@@ -1,11 +1,13 @@
 import React, {PureComponent}  from 'react';
-import { AppRegistry, View, Image, Alert, TouchableOpacity, PermissionsAndroid, StyleSheet, StatusBar} from 'react-native';
+import { AppRegistry, View, Image, Alert, TouchableOpacity, PermissionsAndroid, StyleSheet, StatusBar, CameraRoll} from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 import CameraScreen from './src/components/CameraScreen';
 import HomeScreen from './src/components/HomeScreen';
 import FirstScreen from './src/components/FirstScreen';
+import AddScreen from './src/components/AddScreen';
+import VoiceScreen from './src/components/VoiceScreen';
 
 const estilos = StyleSheet.create({
 	principal: {
@@ -54,6 +56,16 @@ const AppNavigator = createStackNavigator (
 		Camera: {
 			screen: CameraScreen,
 			navigationOptions: ({ navigation }) => ({ title: 'Camera',
+    		}),
+		},
+		Add: {
+			screen: AddScreen,
+			navigationOptions: ({ navigation }) => ({ title: 'Adicionar arquivo',
+    		}),
+		},
+		Voice: {
+			screen: VoiceScreen,
+			navigationOptions: ({ navigation }) => ({ title: 'Comando de voz',
     		}),
 		},
 	},

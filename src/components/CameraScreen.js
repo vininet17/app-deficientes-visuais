@@ -1,6 +1,7 @@
-import React, {PureComponent}  from 'react';
-import { Text, View, TouchableOpacity, PermissionsAndroid, StatusBar } from 'react-native';
+import React, {PureComponent, useState }  from 'react';
+import { Text, View, Alert, TouchableOpacity, PermissionsAndroid, StatusBar, CameraRoll } from 'react-native';
 import { RNCamera } from 'react-native-camera';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 const estilos = {
 	container: {
@@ -35,6 +36,7 @@ export default class CameraScreen extends PureComponent{
           }}
           style={estilos.preview}
           type={RNCamera.Constants.Type.back}
+          autoFocus={RNCamera.Constants.AutoFocus.on}
           flashMode={RNCamera.Constants.FlashMode.off}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
@@ -48,9 +50,6 @@ export default class CameraScreen extends PureComponent{
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel',
           }}
-          onGoogleVisionBarcodesDetected={({ barcodes }) => {
-            console.log(barcodes);
-          }}
         />
         <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity onPress={this.takePicture.bind(this)} style={estilos.capture}>
@@ -63,9 +62,11 @@ export default class CameraScreen extends PureComponent{
 
   takePicture = async() => {
     if (this.camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
+      const options = { quality: 0.5, base64: true, forceUpOrientation: true,
+          fixOrientation: true };
+      const { uri } = await this.camera.takePictureAsync(options);
+      CameraRoll.saveToCameraRoll(uri);
+      Alert.alert('Pronto', 'Foto salva na galeria!');
     }
   };
 } 
