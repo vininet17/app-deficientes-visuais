@@ -1,4 +1,4 @@
-import React, {PureComponent}  from 'react';
+import React from 'react';
 import { View, Image, Text, TouchableOpacity, StatusBar, PermissionsAndroid } from 'react-native';
 
 const estilos = {
@@ -20,7 +20,7 @@ const estilos = {
   }
 }; 
 
-export default class FirstScreen extends PureComponent{
+export default class FirstScreen extends React.Component{
 	render () {
 		return (
 			<View style={estilos.principal}>

@@ -1,49 +1,68 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, {PureComponent}  from 'react';
+import { AppRegistry, View, Image, Alert, TouchableOpacity, PermissionsAndroid, StyleSheet, StatusBar, CameraRoll} from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import HomeScreen from './src/components/HomeScreen';
+import FirstScreen from './src/components/FirstScreen';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
+const estilos = StyleSheet.create({
+  principal: {
+    backgroundColor: 'black',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    alignItems: 'center'
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  container: {
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: 'black',
+    },
+  imagem: {
+    margin: 5,
+    width: 220,
+    height: 220
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  preview: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    },
+    capture: {
+      flex: 0,
+      backgroundColor: '#fff',
+      borderRadius: 5,
+      padding: 15,
+      paddingHorizontal: 20,
+      alignSelf: 'center',
+      margin: 20
+    }
+
 });
+
+const AppNavigator = createStackNavigator (
+  {
+    First: {
+      screen: FirstScreen,
+      navigationOptions: () => ({header: null}),
+    },
+    Home: {
+      screen: HomeScreen,
+      navigationOptions: () => ({header: null}),
+    },
+  },
+  {
+    initialRouteName: 'First'
+  }
+);
+
+const AppContainer = createAppContainer (AppNavigator);
+
+export default class App extends PureComponent{
+  render () {
+    return (
+      <AppContainer/>
+    );
+  }
+}     
+
+AppRegistry.registerComponent('appdefvisu', () => App);

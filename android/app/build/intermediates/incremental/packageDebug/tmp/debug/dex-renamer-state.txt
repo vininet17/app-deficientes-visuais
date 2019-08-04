@@ -1,0 +1,4 @@
+#Wed Jul 31 17:32:24 BRT 2019
+base.0=C\:\\Users\\Vinicius\\Desktop\\App\\appdefvisu\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+path.0=classes.dex
+renamed.0=classes.dex
