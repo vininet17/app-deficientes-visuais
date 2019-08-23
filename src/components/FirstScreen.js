@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StatusBar, PermissionsAndroid } from 'react-native';
+import { Audio } from 'expo-av';
 
 const estilos = {
 	principal: {
@@ -21,13 +22,17 @@ const estilos = {
 }; 
 
 export default class FirstScreen extends React.Component{
+  componentDidMount() {
+     setInterval(() => {
+      {this.props.navigation.navigate('Home')}
+    }, 2000);
+  }
+
 	render () {
 		return (
 			<View style={estilos.principal}>
           <StatusBar hidden={true}/>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
-            <Image style={estilos.imagem} source={require('../imagens/logo.png')} />
-          </TouchableOpacity>
+          <Image style={estilos.imagem} source={require('../imagens/logo.png')} />
           <Text style={estilos.texto}>SEES</Text>
       </View>
     );

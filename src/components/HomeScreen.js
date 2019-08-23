@@ -2,6 +2,7 @@ import React from "react";
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   Button,
   Clipboard,
   FlatList,
@@ -21,14 +22,27 @@ import * as ImagePicker from 'expo-image-picker';
 import uuid from "uuid";
 import Environment from "../config/environment";
 import firebase from "../config/firebase";
+import { Audio } from 'expo-av';
+import { FluidNavigator } from 'react-navigation-fluid-transitions';
+import * as Speech from 'expo-speech';
+import axios from 'axios';
 
 console.disableYellowBox = true;
+var oquefalar='';
+let results = '';
+let uploadUrl = '';
 
 export default class HomeScreen extends React.Component {
+  speak() {
+    var falar = oquefalar;
+    Speech.speak(falar);
+  }
+
   state = {
     image: null,
     uploading: false,
-    googleResponse: null
+    googleResponse: null,
+    axiosResponse: null
   };
 
   async componentDidMount() {
@@ -38,30 +52,46 @@ export default class HomeScreen extends React.Component {
     await Permissions.askAsync(Permissions.READ_EXTERNAL_STORAGE);
   }
 
+  async componentWillMount() {
+    this.backgroundMusic = new Audio.Sound();
+    try {
+      await this.backgroundMusic.loadAsync(
+        require("../sounds/telaInicial.mp3")
+      );
+      await this.backgroundMusic.setIsLoopingAsync(false);
+      await this.backgroundMusic.playAsync();
+      // Your sound is playing!
+    } catch (error) {
+      // An error occurred!
+    }
+  }
+
+  componentDidMount() {
+     BackHandler.addEventListener('hardwareBackPress', () => { return true; });
+  }
+
   render() {
     let { image } = this.state;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container} onLoad={this.backgroundMusic.playAsync()}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.helpContainer}>
             <TouchableOpacity onPress={this._pickImage}>
-              <Image style={styles.imagem} source={require('../imagens/addm.png')} />
+              <Image style={styles.imagem} source={require('../imagens/add.png')} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={this._takePhoto}>
-              <Image style={styles.imagem} source={require('../imagens/camm.png')} />
+              <Image style={styles.imagem} source={require('../imagens/cam.png')} />
             </TouchableOpacity>
-            {this.state.googleResponse && (
-              <FlatList
-                data={this.state.googleResponse.responses[0].labelAnnotations}
-                extraData={this.state}
-                keyExtractor={this._keyExtractor}
-                renderItem={({ item }) => <Text style={styles.texto}>Item: {item.description}</Text>}
-              />
+
+            {this.state.axiosResponse && (
+              <Text style={styles.texto}>
+                Resultado: {results}
+              </Text>
             )}
             {this._maybeRenderImage()}
             {this._maybeRenderUploadingOverlay()}
@@ -117,7 +147,7 @@ export default class HomeScreen extends React.Component {
       >
         <Button
           style={{ marginBottom: 10 }}
-          onPress={() => this.submitToGoogle()}
+          onPress={this.teste}
           title="Procurar texto"
         />
 
@@ -173,18 +203,29 @@ export default class HomeScreen extends React.Component {
   _copyToClipboard = () => {
     Clipboard.setString(this.state.image);
     Alert.alert('Sucesso','Copiado para área de transferência');
+    oquefalar = 'Copiado para área de transferência'
+    {this.speak()}
+    oquefalar = ''
   };
 
   _takePhoto = async () => {
+    oquefalar = 'Abrindo câmera'
+    {this.speak()}
+    oquefalar = ''
+    {this.backgroundMusic.stopAsync()}
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [4, 3]
+      aspect: [4,3]
     });
 
     this._handleImagePicked(pickerResult);
   };
 
   _pickImage = async () => {
+    oquefalar = 'Abrindo recentes'
+    {this.speak()}
+    oquefalar = ''
+    {this.backgroundMusic.stopAsync()}
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3]
@@ -204,31 +245,37 @@ export default class HomeScreen extends React.Component {
     } catch (e) {
       console.log(e);
       Alert.alert('Erro','Upload falhou :(');
+      oquefalar = 'Upload falhou'
+      {this.speak()}
+      oquefalar = ''
     } finally {
       this.setState({ uploading: false });
     }
   };
 
   submitToGoogle = async () => {
+    oquefalar = 'Procurando texto'
+    {this.speak()}
+    oquefalar = ''
     try {
       this.setState({ uploading: true });
       let { image } = this.state;
+      let { response } = "";
       let body = JSON.stringify({
         requests: [
           {
-            features: [
-              { type: "TEXT_DETECTION", maxResults: 5 },
-              { type: "DOCUMENT_TEXT_DETECTION", maxResults: 5 }
-            ],
             image: {
               source: {
                 imageUri: image
               }
-            }
+            },
+            features: [
+              { type: "TEXT_DETECTION"}
+            ]
           }
         ]
       });
-      let response = await fetch(
+      response = await fetch(
         "https://vision.googleapis.com/v1/images:annotate?key=" +
           Environment["GOOGLE_CLOUD_VISION_API_KEY"],
         {
@@ -240,10 +287,53 @@ export default class HomeScreen extends React.Component {
           body: body
         }
       );
+
+      body = {
+        "requests": [
+          {
+            "image": {
+              "source": {
+                "imageUri": image
+              }
+            },
+            "features": [
+              {
+                "type": "TEXT_DETECTION",
+                "maxResults": 1
+              }
+            ]
+          }
+        ]
+      }
+      axios.post('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBWJs9JaNsnzejUVXzVB6P7dLlvpi5y9fw', body)
+  .then((response) => console.log(response));
+
       let responseJson = await response.json();
       console.log(responseJson);
       this.setState({
         googleResponse: responseJson,
+        uploading: false
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+   teste = async () => {
+    try{
+      this.setState({ uploading: true });
+      let response='';
+      let apikey = 'b4d064d7c788957';
+      let image = uploadUrl;
+      response = axios.get('https://api.ocr.space/parse/imageurl?apikey=' + apikey + '&url=' + image + '&language=por&isOverlayRequired=false')
+        .then(function(response) {
+          results = response.data.ParsedResults[0].ParsedText;
+          console.log(response);
+        }).catch(function(error) {
+          console.log(error);
+        });
+      let responseJson = await response;
+      this.setState({
+        axiosResponse: results,
         uploading: false
       });
     } catch (error) {
@@ -280,6 +370,7 @@ async function uploadImageAsync(uri) {
 
   return await snapshot.ref.getDownloadURL();
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -334,8 +425,8 @@ const styles = StyleSheet.create({
   },
 
   imagem: {
-	margin: 10,
-	width: 280,
-	height: 280
+  	margin: 10,
+  	width: 280,
+  	height: 280
   }
 });
