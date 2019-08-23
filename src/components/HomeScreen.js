@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -322,7 +322,7 @@ export default class HomeScreen extends React.Component {
     try{
       this.setState({ uploading: true });
       let response='';
-      let apikey = 'b4d064d7c788957';
+      let apikey = 'minhaApiKey';
       let image = uploadUrl;
       response = axios.get('https://api.ocr.space/parse/imageurl?apikey=' + apikey + '&url=' + image + '&language=por&isOverlayRequired=false')
         .then(function(response) {
