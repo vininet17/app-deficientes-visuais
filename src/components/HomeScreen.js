@@ -27,6 +27,13 @@ import { FluidNavigator } from 'react-navigation-fluid-transitions';
 import * as Speech from 'expo-speech';
 import axios from 'axios';
 
+/* Imports the Google Cloud client library
+const textToSpeech = require('@google-cloud/text-to-speech');
+
+// Import other required libraries
+import * as fs from 'expo-file-system';
+const util = require('util');*/
+
 console.disableYellowBox = true;
 var oquefalar='';
 let results = '';
@@ -90,7 +97,7 @@ export default class HomeScreen extends React.Component {
 
             {this.state.axiosResponse && (
               <Text style={styles.texto}>
-                Resultado: {results}
+                {results}
               </Text>
             )}
             {this._maybeRenderImage()}
@@ -320,14 +327,27 @@ export default class HomeScreen extends React.Component {
   };
    teste = async () => {
     try{
+      var formData = new FormData ( ) ;
+      formData.append ( "url" ,  uploadUrl ) ;
+      formData.append ( "language"    ,  "por" ) ;
+      formData.append ( "isOverlayRequired" ,  "False" ) ;   
       this.setState({ uploading: true });
       let response='';
-      let apikey = 'minhaApiKey';
+      let apikey = 'b4d064d7c788957';
       let image = uploadUrl;
-      response = axios.get('https://api.ocr.space/parse/imageurl?apikey=' + apikey + '&url=' + image + '&language=por&isOverlayRequired=false')
+      response = axios({
+          url: 'https://api.ocr.space/parse/image',
+          method: 'post',
+          data: formData,
+          headers: {
+            apikey: 'b4d064d7c788957',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }
+        })
         .then(function(response) {
           results = response.data.ParsedResults[0].ParsedText;
           console.log(response);
+          console.log(results);
         }).catch(function(error) {
           console.log(error);
         });
@@ -339,8 +359,35 @@ export default class HomeScreen extends React.Component {
     } catch (error) {
       console.log(error);
     }
+    oquefalar = results
+    {this.speak()}
+    oquefalar = ''
   };
 }
+
+/*async function falar() {
+  // Creates a client
+  const client = new textToSpeech.TextToSpeechClient();
+
+  // The text to synthesize
+  const text = 'O vinicius é bonito.';
+
+  // Construct the request
+  const request = {
+    input: {text: text},
+    // Select the language and SSML Voice Gender (optional)
+    voice: {languageCode: 'pt-BR', ssmlGender: 'NEUTRAL'},
+    // Select the type of audio encoding
+    audioConfig: {audioEncoding: 'MP3'},
+  };
+
+  // Performs the Text-to-Speech request
+  const [response] = await client.synthesizeSpeech(request);
+  // Write the binary audio content to a local file
+  const writeFile = util.promisify(fs.writeFile);
+  await writeFile('output.mp3', response.audioContent, 'binary');
+  console.log('Audio content written to file: output.mp3');
+}*/
 
 async function uploadImageAsync(uri) {
   // Why are we using XMLHttpRequest? See:

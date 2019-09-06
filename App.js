@@ -1,6 +1,7 @@
 import React, {PureComponent}  from 'react';
 import { AppRegistry, View, Image, Alert, TouchableOpacity, PermissionsAndroid, StyleSheet, StatusBar, CameraRoll} from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 import HomeScreen from './src/components/HomeScreen';
 import FirstScreen from './src/components/FirstScreen';
@@ -65,4 +66,4 @@ export default class App extends PureComponent{
   }
 }     
 
-AppRegistry.registerComponent('appdefvisu', () => App);
+AppRegistry.registerComponent('sees', () => App);
