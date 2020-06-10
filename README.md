@@ -28,7 +28,7 @@
 
 ## 💻 Project
 
-Simple design to assist in reading the visually impaired
+Simple project to assist in reading the visually impaired
 
 
 ## :rocket: Technologies
