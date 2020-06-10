@@ -1,7 +1,0 @@
-1 - Executar GIT BASH dentro da pasta no App Aux Def ...
-2 - git init
-3 - git add nomeArquivo ou -A
-4 - git status
-5 - git commit -m "mensagem dizendo oq foi feito"
-6 - git remote add origin https://github.com/vininet17/testando.git
-7 - git push -u origin master
