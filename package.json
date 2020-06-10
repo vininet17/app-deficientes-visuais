@@ -22,7 +22,8 @@
     "react-navigation": "^4.0.0",
     "react-navigation-fluid-transitions": "^0.3.2",
     "react-navigation-stack": "^1.5.1",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "minimist": ">=1.2.3",
   },
   "devDependencies": {
     "babel-preset-expo": "^6.0.0"
